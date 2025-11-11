@@ -39,9 +39,7 @@ def parse(code: str):
             char_idx += 1
         if stack:
             raise SyntaxError
-        if arg == "":
-            elements.append([])
-        else:
+        if arg:
             elements.append(parse(arg))
 
         return elements

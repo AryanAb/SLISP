@@ -8,6 +8,7 @@ def get_input():
     while True:
         code = input(">>> ")
         tree = parse(code)
+        print(tree)
         res = evaluate(tree, {})
         if res is not None:
             print(res)

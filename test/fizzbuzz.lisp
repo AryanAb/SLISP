@@ -13,4 +13,4 @@
     )
 )
 
-(fizzbuzz 5)
+(fizzbuzz 30)
