@@ -1,8 +1,15 @@
 from typing import Union
+from lisp_parser import parse
 
 constants = {}
 variables = {}
 functions = {}
+
+
+def import_module(children):
+    assert len(children) == 1
+    path = children[0][1:-1]
+    execute(path)
 
 
 def evaulate_simple_math(operation, operands, scope) -> float:
@@ -168,6 +175,8 @@ def evaluate_atomic(atom: str, scope) -> Union[float, str]:
         return True
     elif atom == "False":
         return False
+    elif isinstance(atom, float) or isinstance(atom, int):
+        return atom
     elif atom.replace(".", "", 1).isdigit():
         return float(atom) if "." in atom else int(atom)
     elif atom[0] == '"' and atom[-1] == '"':
@@ -190,6 +199,8 @@ def evaluate(tree, scope):
             return evaulate_simple_math(parent, children, scope)
         elif parent in [">", "<", ">=", "<=", "=", "!="]:
             return evaluate_math_comparison(parent, children, scope)
+        elif parent == "import":
+            import_module(children)
         elif parent == "const":
             evaluate_define_constant(children, scope)
         elif parent == "let":
@@ -229,3 +240,37 @@ def evaluate(tree, scope):
         else:
             raise TypeError
 
+"""
+Below are functions required to open a file and interpret it.
+They are in this file to avoid circular imports.
+"""
+
+def get_s_expressions(code):
+    s_expressions = []
+
+    stack = []
+    s_expression = ""
+    char_idx = 0
+    while char_idx < len(code):
+        char = code[char_idx]
+        if char == "(":
+            stack.append(char)
+        elif char == ")":
+            stack.pop()
+        s_expression += char
+        if not stack and s_expression:
+            s_expressions.append(s_expression)
+            s_expression = ""
+        char_idx += 1
+
+    return filter(lambda s_expression: s_expression != "\n", s_expressions)
+
+
+def execute(file_path):
+    with open(file_path) as file:
+        s_expressions = get_s_expressions(file.read())
+        for s_expression in s_expressions:
+            tree = parse(s_expression)
+            res = evaluate(tree, {})
+            if res is not None:
+                print(res)

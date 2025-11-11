@@ -1,0 +1,15 @@
+(defunc min (lst) 
+    (fold 
+        lst 
+        (lambda (curr acc) (if (< curr acc) curr acc)) 
+        (list-ref lst 0)
+    )
+)
+
+(defunc max (lst)
+    (fold
+        lst
+        (lambda (curr acc) (if (> curr acc) curr acc))
+        (list-ref lst 0)
+    )
+)
