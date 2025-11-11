@@ -1,7 +1,3 @@
-from evaluate import evaluate
-
-REPL_INFO = "REPLIS v0.1.0"
-
 def is_atomic(code: str) -> bool:
     return code[0] != '(' and code[-1] != ')'
 
@@ -12,7 +8,6 @@ def parse(code: str):
     if len(code) == 0:
         return []
     
-    
     if is_atomic(code):
         return code
     if is_s_expression(code):
@@ -22,7 +17,7 @@ def parse(code: str):
         stack = []
         while char_idx < len(code) - 1:
             char = code[char_idx]
-            if arg == '' and char == ' ':
+            if (arg == '' and char == ' ') or char == '\n' or char == '\t':
                 pass
             elif char != ' ':
                 arg += char
@@ -30,6 +25,11 @@ def parse(code: str):
                     stack.append('(')
                 elif char == ')':
                     stack.pop()
+                elif char == '"':
+                    if stack and stack[-1] == '"':
+                        stack.pop()
+                    else:
+                        stack.append('"')
             elif char == ' ' and arg != '':
                 if not stack:
                     elements.append(parse(arg))
@@ -37,19 +37,11 @@ def parse(code: str):
                 else:
                     arg += char
             char_idx += 1
+        if stack:
+            raise SyntaxError
         if arg == "":
             elements.append([])
         else:
             elements.append(parse(arg))
 
         return elements
-
-
-def get_input():
-    print(REPL_INFO)
-    while True:
-        code = input(">>> ")
-        tree = parse(code)
-        res = evaluate(tree, {})
-        if res is not None:
-            print(res)
