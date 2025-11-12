@@ -1,6 +1,6 @@
 # SLSIP
 
-SLISP, standing for Simplified LISP (or rather Sh*tty LISP once you get to look at the code) is an interpreter for a simplifed version of LISP.
+SLisp, standing for Simplified Lisp (or rather Sh*tty Lisp once you get to look at the code), is an interpreter for a simplifed version of Lisp.
 
 ## Installation
 
@@ -14,7 +14,7 @@ You can verify that the installation was successful by running the `slisp` comma
 
 ## Usage
 
-There are two ways to run SLISP programs. The first one is via a REPL. To achieve this, simply run the `slisp` command with no arguments.
+There are two ways to run SLisp programs. The first one is via a REPL. To achieve this, simply run the `slisp` command with no arguments.
 
 ```shell
 ~$ slisp
