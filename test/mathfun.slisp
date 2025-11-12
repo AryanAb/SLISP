@@ -1,0 +1,5 @@
+(import "math.slisp")
+
+(print (sin (/ PI 2)))
+(print (cos (/ PI 2)))
+(print (+ (pow (sin 1) 2) (pow (cos 1) 2)))
