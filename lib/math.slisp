@@ -1,3 +1,6 @@
+(const PI 3.1415926535)
+
+;; Returns the minimum element of the list lst
 (defunc min (lst) 
     (fold 
         lst 
@@ -6,10 +9,55 @@
     )
 )
 
+;; Returns the maximum element of the list lst
 (defunc max (lst)
     (fold
         lst
         (lambda (curr acc) (if (> curr acc) curr acc))
         (list-ref lst 0)
     )
+)
+
+;; Returns the ceiling of a number x
+;; NOTE: the floor function is implemented as a built-in primative
+(defunc ceil (x)
+    (* -1 (floor (* -1 x)))
+)
+
+;; Calculate square root of num by running 100 iterations of Newton's algorithm
+(defunc sqrt (num) 
+    (fold 
+        (build-list 100 num)
+        (lambda (curr acc) (/ (+ acc (/ curr acc)) 2))
+        1
+    )
+)
+
+;; Calculate x to the power of y
+;; y must be an integer
+(defunc pow (x y)
+    (fold 
+        (build-list y x) 
+        (lambda (curr acc) (* curr acc)) 
+        1
+    )
+)
+
+(defunc sin_helper (x)
+    (- x (- (/ (pow x 3) 6) (- (/ (pow x 5) 120) (- (/ (pow x 7) 5040) (- (/ (pow x 9) 362880) (- (/ (pow x 11) 39916800) (/ (pow x 13) 6227020800)))))))
+)
+
+;; Calculate sine of an angle x in radians
+(defunc sin (x)
+    (sin_helper (- x (* (* 2 PI) (floor (/ (+ x PI) (* 2 PI))))))
+)
+
+;; Calculate sine of an angle x in radians
+(defunc cos (x)
+    (sin (+ x (/ PI 2)))
+)
+
+;; Calculate tangant of an angle x in radians
+(defunc tan (x)
+    (/ (sin x) (cos x))
 )

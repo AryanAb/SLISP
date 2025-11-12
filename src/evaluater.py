@@ -1,5 +1,6 @@
 from typing import Union
 from lisp_parser import parse
+import math
 
 constants = {}
 variables = {}
@@ -106,6 +107,11 @@ def evaluate_if_statement(children, scope):
         return evaluate(children[1], scope)
     return evaluate(children[2], scope)
 
+def evaluate_cond_statement(children, scope):
+    for child in children:
+        condition, action = child
+        if (evaluate(condition, scope)):
+            return evaluate(action, scope)
 
 def evaluate_for_statement(children, scope):
     lst = evaluate(children[1], scope)
@@ -199,6 +205,10 @@ def evaluate(tree, scope):
             return evaulate_simple_math(parent, children, scope)
         elif parent in [">", "<", ">=", "<=", "=", "!="]:
             return evaluate_math_comparison(parent, children, scope)
+        elif parent == 'floor':
+            value = evaluate(children[0], scope)
+            assert isinstance(value, float) or isinstance(value, int)
+            return math.floor(value)
         elif parent == "import":
             import_module(children)
         elif parent == "const":
@@ -213,6 +223,8 @@ def evaluate(tree, scope):
             define_lambda(children)
         elif parent == "if":
             return evaluate_if_statement(children, scope)
+        elif parent == "cond":
+            return evaluate_cond_statement(children, scope)
         elif parent == "for":
             evaluate_for_statement(children, scope)
         elif parent == "list":
@@ -268,7 +280,8 @@ def get_s_expressions(code):
 
 def execute(file_path):
     with open(file_path) as file:
-        s_expressions = get_s_expressions(file.read())
+        non_comment_lines = filter(lambda line: not line.startswith(';'), file.readlines())
+        s_expressions = get_s_expressions(''.join(non_comment_lines))
         for s_expression in s_expressions:
             tree = parse(s_expression)
             res = evaluate(tree, {})

@@ -1,7 +1,7 @@
 from lisp_parser import parse
-from evaluate import evaluate
+from evaluater import evaluate
 
-REPL_INFO = "REPLIS v0.1.0"
+REPL_INFO = "SLSIP v0.1.0"
 
 def get_input():
     print(REPL_INFO)
