@@ -7,7 +7,7 @@ SLISP, standing for Simplified LISP (or rather Sh*tty LISP once you get to look 
 Simply clone the directory, and run the following command in the root directory where the `pyproject.toml` is located.
 
 ```shell
-pip install .
+pip install -e .
 ```
 
 You can verify that the installation was successful by running the `slisp` command in the terminal.

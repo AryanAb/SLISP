@@ -1,6 +1,7 @@
 from typing import Union
 from lisp_parser import parse
 import math
+import os
 
 constants = {}
 variables = {}
@@ -10,7 +11,12 @@ functions = {}
 def import_module(children):
     assert len(children) == 1
     path = children[0][1:-1]
-    execute(path)
+    script_path = os.path.realpath(__file__)
+    lib_path = f"{script_path}/../../stdlib/{path}"
+    if os.path.isfile(lib_path):
+        execute(lib_path)
+    else:
+        execute(path)
 
 
 def evaulate_simple_math(operation, operands, scope) -> float:
